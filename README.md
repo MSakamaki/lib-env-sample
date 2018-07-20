@@ -1,27 +1,69 @@
-# LibEnvSample
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
 
-## Development server
+## library environments examples ( .forRoot() )
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+```sh
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# view to { "production": false }
+npm start
 
-## Build
+# view to { "production": true }
+npm start -- --prod
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-## Running unit tests
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### files of interest
 
-## Running end-to-end tests
+#### backend/src/lib/backend.module.ts
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+environment inject
 
-## Further help
+```typescript
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+  public static forRoot(environment: any): ModuleWithProviders {
+
+    return {
+        ngModule: BackendModule,
+        providers: [
+            {
+                provide: 'environment',
+                useValue: environment
+            }
+        ]
+    };
+  }
+```
+
+
+#### backend/src/lib/backend.service.ts
+
+use inject environment
+
+```typescript
+
+  constructor(
+    @Inject('environment') private environment: any,
+) { }
+
+```
+
+#### src/app/app.module.ts
+
+set environment
+
+```sh
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BackendModule.forRoot(environment),
+    BrowserModule,
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+```
+
